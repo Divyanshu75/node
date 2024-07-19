@@ -1,10 +1,11 @@
 import { v2 as cloudinary } from 'cloudinary';
 import fs from "fs"
+import dotenv from 'dotenv';
 
 
 cloudinary.config({ 
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
-    api_key: process.env.CLOUDINARY_API_SECRET,
+    api_key: process.env.CLOUDINARY_API_KEY,
     api_secret:process.env.CLOUDINARY_API_SECRET 
 });
 
@@ -14,7 +15,8 @@ const uploadOnCloudinary=async(localFilePath)=>{
         const response= await cloudinary.uploader.upload(localFilePath,{
             resource_type:'auto'
         })
-        console.log("file is uploaded in Cloundinary",response.url);
+        // console.log("file is uploaded in Cloundinary",response.url);
+        fs.unlinkSync(localFilePath)
         return response;
     }catch(error){
         fs.unlinkSync(localFilePath) //remove the locally saved temp file 
@@ -27,7 +29,7 @@ export {uploadOnCloudinary}
 
 
 
-cloudinary.v2.uploader.upload(
+cloudinary.uploader.upload(
     'https://res.cloudinary.com/demo/image/upload/getting-started/shoes.jpg', {
         public_id: 'shoes',
     }
